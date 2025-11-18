@@ -22,3 +22,20 @@ Create a seeding script that:
 ## Running the test
 ```bash
 ./0-main.py
+
+# Python Generators - Task 1
+
+## Objective
+Create a Python generator to stream rows from the `user_data` table in the `ALX_prodev` MySQL database.
+
+## Files
+- `0-stream_users.py` : Contains the generator function `stream_users()`.
+- `1-main.py` : Script to test the generator by printing the first 6 rows.
+- `seed.py` : Task 0 database setup (ensure this exists and runs successfully).
+- `user_data.csv` : Sample data used to populate the database.
+
+## Usage
+1. Ensure Task 0 (seed.py) has been run and database `ALX_prodev` exists.
+2. Activate your virtual environment:
+```bash
+source venv/Scripts/activate  # Windows PowerShell
