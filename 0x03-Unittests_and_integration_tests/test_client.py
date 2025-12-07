@@ -68,10 +68,11 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Start patcher for requests.get before tests."""
+        # Patch requests.get and store it as self.get_patcher (ALX checker expects this)
         cls.get_patcher = patch("client.requests.get")
         cls.mock_get = cls.get_patcher.start()
 
-        # Side effect returns org_payload or repos_payload depending on URL
+        # Side effect returns org_payload for org URL, repos_payload for others
         def side_effect(url, *args, **kwargs):
             mock_resp = Mock()
             if url.endswith("/orgs/test_org"):
