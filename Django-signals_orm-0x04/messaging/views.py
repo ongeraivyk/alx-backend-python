@@ -1,8 +1,18 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from django.shortcuts import redirect, render
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse
 from .models import Message
+
+def get_all_replies(message):
+    replies = message.replies.all().select_related("sender", "receiver")
+    all_replies = []
+    for reply in replies:
+        all_replies.append(reply)
+        all_replies.extend(get_all_replies(reply))
+    return all_replies
+
 
 @login_required
 def delete_user(request):
@@ -14,11 +24,39 @@ def delete_user(request):
 
     return HttpResponse("Send a POST request to delete your account.")
 
-
+@login_required
 def inbox_unread(request):
     user = request.user
     unread_messages = Message.unread.unread_for_user(user)
 
     return render(request, 'inbox_unread.html', {
         'unread_messages': unread_messages
+    })
+
+
+@login_required
+def conversation_messages(request, user_id):
+    other_user = get_object_or_404(User, id=user_id)
+
+    messages = (
+        Message.objects.filter(
+            sender=request.user, receiver=other_user
+        )
+        | Message.objects.filter(
+            sender=other_user, receiver=request.user
+        )
+    ).select_related("sender", "receiver", "parent_message").prefetch_related("replies")
+
+    # Build threaded structure
+    threaded_messages = []
+    for msg in messages:
+        if msg.parent_message is None:  # top-level messages only
+            threaded_messages.append({
+                "message": msg,
+                "replies": get_all_replies(msg)
+            })
+
+    return render(request, "messages/conversation.html", {
+        "messages": threaded_messages,
+        "other_user": other_user
     })
