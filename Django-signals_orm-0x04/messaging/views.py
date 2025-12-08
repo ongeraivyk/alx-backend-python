@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.cache import cache_page
 from django.http import HttpResponse
 from .models import Message
 
@@ -38,6 +39,7 @@ def unread_inbox(request):
 
 
 @login_required
+@cache_page(60)
 def conversation_messages(request, user_id):
     other_user = get_object_or_404(User, id=user_id)
 
