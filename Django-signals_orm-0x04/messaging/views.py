@@ -25,12 +25,10 @@ def delete_user(request):
     return HttpResponse("Send a POST request to delete your account.")
 
 @login_required
-def inbox_unread(request):
-    user = request.user
-    unread_messages = Message.unread.unread_for_user(user)
-
-    return render(request, 'inbox_unread.html', {
-        'unread_messages': unread_messages
+def unread_inbox(request):
+    unread_messages = Message.unread.unread_for_user(request.user)
+    return render(request, "messages/unread_inbox.html", {
+        "unread_messages": unread_messages
     })
 
 
