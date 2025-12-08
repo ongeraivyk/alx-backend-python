@@ -20,6 +20,7 @@ class Message(models.Model):
     unread = UnreadMessagesManager()
     parent_message = models.ForeignKey('self', related_name='replies', on_delete=models.CASCADE, null=True, blank=True)
     edited = models.BooleanField(default=False)  # Tracks if message was edited
+    edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='edited_messages')
 
     def __str__(self):
         return f"From {self.sender} to {self.receiver} at {self.timestamp}"
