@@ -26,7 +26,12 @@ def delete_user(request):
 
 @login_required
 def unread_inbox(request):
-    unread_messages = Message.unread.unread_for_user(request.user)
+    # Fetch unread messages and select only necessary fields
+    unread_messages = (
+        Message.unread.unread_for_user(request.user)
+        .only("id", "sender_id", "receiver_id", "content", "timestamp")
+    )
+    
     return render(request, "messages/unread_inbox.html", {
         "unread_messages": unread_messages
     })
