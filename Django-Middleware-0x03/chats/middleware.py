@@ -7,6 +7,9 @@ from django.utils.deprecation import MiddlewareMixin
 REQUEST_LOG_FILE = "requests.log"
 
 
+
+
+
 class RequestLoggingMiddleware:
     """
     Logs every request with timestamp, user, and path.
@@ -14,15 +17,12 @@ class RequestLoggingMiddleware:
     """
     def __init__(self, get_response):
         self.get_response = get_response
+        logging.basicConfig(filename="requests.log", level=logging.INFO)
 
     def __call__(self, request):
         user = request.user if request.user.is_authenticated else "Anonymous"
-
-        with open(REQUEST_LOG_FILE, "a") as f:
-            f.write(f"{datetime.now()} - User: {user} - Path: {request.path}\n")
-
+        logging.info(f"{datetime.now()} - User: {user} - Path: {request.path}")
         return self.get_response(request)
-
 
 class RestrictAccessByTimeMiddleware:
     """
