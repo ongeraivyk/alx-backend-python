@@ -1,0 +1,11 @@
+#!/bin/bash
+
+kubectl apply -f blue_deployment.yaml
+
+kubectl rollout status deployment/django-blue
+
+while true; do
+  curl http://localhost || echo "request failed"
+  sleep 1
+done
+
