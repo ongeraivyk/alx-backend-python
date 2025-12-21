@@ -1,7 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+<<<<<<< HEAD
   name: django-messaging-deployment
+=======
+  name: django-messaging
+>>>>>>> 901bd2c (Jenkins and Github Actions)
 spec:
   replicas: 1
   selector:
@@ -13,22 +17,38 @@ spec:
         app: django-messaging
     spec:
       containers:
+<<<<<<< HEAD
         - name: django-messaging
           image: messaging_app:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
+=======
+      - name: django
+        image: django
+        ports:
+        - containerPort: 8000
+>>>>>>> 901bd2c (Jenkins and Github Actions)
 ---
 apiVersion: v1
 kind: Service
 metadata:
+<<<<<<< HEAD
   name: django-messaging-service
+=======
+  name: django-service
+>>>>>>> 901bd2c (Jenkins and Github Actions)
 spec:
   type: ClusterIP
   selector:
     app: django-messaging
   ports:
+<<<<<<< HEAD
     - protocol: TCP
       port: 80
       targetPort: 8000
 
+=======
+    - port: 80
+      targetPort: 8000
+>>>>>>> 901bd2c (Jenkins and Github Actions)
